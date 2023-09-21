@@ -17,6 +17,10 @@ const WorkoutDetails = ({ workout }) => {
         <strong> Reps: </strong>
         {workout.reps}
       </p>
+      <p>
+        <strong> splitDay: </strong>
+        {workout.splitDay}
+      </p>
       <p>{workout.createdAt}</p>
     </div>
   );
