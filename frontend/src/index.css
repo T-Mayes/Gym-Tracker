@@ -131,6 +131,16 @@ form button {
   border-radius: 4px;
   cursor: pointer;
 }
+.create button,
+.cancel-button {
+  margin-right: 10px;
+}
+.create {
+  text-align: center;
+}
+.cancel-button {
+  background: var(--error);
+}
 div.error {
   padding: 10px;
   background: #ffefef;

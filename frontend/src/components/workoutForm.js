@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const WorkoutForm = () => {
+const WorkoutForm = ({ workout, onCancel }) => {
   const [exercise, setExercise] = useState("");
   const [load, setLoad] = useState("");
   const [sets, setSets] = useState("");
@@ -8,14 +8,31 @@ const WorkoutForm = () => {
   const [splitDay, setSplitDay] = useState("");
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    if (workout) {
+      setExercise(workout.exercise);
+      setLoad(workout.load);
+      setSets(workout.sets);
+      setReps(workout.reps);
+      setSplitDay(workout.splitDay);
+    }
+  }, [workout]);
+
+  const handleCancel = () => {
+    onCancel();
+  };
+
   const SubmitEx = async (e) => {
     e.preventDefault();
 
-    const workout = { exercise, load, sets, reps, splitDay };
+    const updatedWorkout = { exercise, load, sets, reps, splitDay };
 
-    const response = await fetch("/api/workouts", {
-      method: "POST",
-      body: JSON.stringify(workout),
+    const method = workout ? "PATCH" : "POST";
+    const url = workout ? `/api/workouts/${workout._id}` : "/api/workouts";
+
+    const response = await fetch(url, {
+      method,
+      body: JSON.stringify(updatedWorkout),
       headers: {
         "Content-Type": "application/json",
       },
@@ -32,55 +49,70 @@ const WorkoutForm = () => {
       setLoad("");
       setSets("");
       setReps("");
-      setSplitDay("");
+      //setSplitDay("");
       setError(null);
-      console.log("Exercise Added", json);
+      console.log("updated", json);
       window.location.reload();
     }
   };
 
   return (
     <form className="create" onSubmit={SubmitEx}>
-      <h3>Add a new exercise</h3>
+      <h3>{workout ? "Edit Exercise" : "Add a new exercise"}</h3>
 
-      <label>Exercise Name:</label>
-      <input
-        type="text"
-        onChange={(e) => setExercise(e.target.value)}
-        value={exercise}
-      />
+      <div>
+        <label>Exercise Name:</label>
+        <input
+          type="text"
+          onChange={(e) => setExercise(e.target.value)}
+          value={exercise}
+        />
+      </div>
 
-      <label>Load (in kg):</label>
-      <input
-        type="number"
-        onChange={(e) => setLoad(e.target.value)}
-        value={load}
-      />
+      <div>
+        <label>Load (in kg):</label>
+        <input
+          type="number"
+          onChange={(e) => setLoad(e.target.value)}
+          value={load}
+        />
+      </div>
 
-      <label>Sets:</label>
-      <input
-        type="number"
-        onChange={(e) => setSets(e.target.value)}
-        value={sets}
-      />
+      <div>
+        <label>Sets:</label>
+        <input
+          type="number"
+          onChange={(e) => setSets(e.target.value)}
+          value={sets}
+        />
+      </div>
 
-      <label>Reps:</label>
-      <input
-        type="number"
-        onChange={(e) => setReps(e.target.value)}
-        value={reps}
-      />
+      <div>
+        <label>Reps:</label>
+        <input
+          type="number"
+          onChange={(e) => setReps(e.target.value)}
+          value={reps}
+        />
+      </div>
 
-      {/* <label>Split Day:</label>
-      <select name="Split" id="workouts">
-        <option value="Chest & Biceps">Chest & Biceps</option>
-        <option value="Back & Triceps">Back & Triceps</option>
-        <option value="Legs">Legs</option>
-        <option value="Chest & Back">Chest & Back</option>
-        <option value="Arms & Shoulders">Arms & Shoulders</option>
-      </select> */}
+      {/* {workout && (
+        <div>
+          <label>Split Day:</label>
+          <input
+            type="text"
+            onChange={(e) => setSplitDay(e.target.value)}
+            value={splitDay}
+          />
+        </div>
+      )} */}
 
-      <button>Add Exercise</button>
+      <button>{workout ? "Update" : "Add Exercise"}</button>
+      {workout && (
+        <button type="button" onClick={handleCancel}>
+          Cancel
+        </button>
+      )}
       {error && <div className="error">{error}</div>}
     </form>
   );

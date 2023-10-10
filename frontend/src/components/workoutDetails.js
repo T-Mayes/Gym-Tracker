@@ -1,7 +1,11 @@
+import React, { useState, useEffect } from "react";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import WorkoutForm from "../components/workoutForm";
 
 const WorkoutDetails = ({ workout }) => {
-  const handleClick = async () => {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleDelete = async () => {
     const response = await fetch("/api/workouts/" + workout._id, {
       method: "DELETE",
     });
@@ -12,11 +16,25 @@ const WorkoutDetails = ({ workout }) => {
     }
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
   return (
     <div className="workout-details">
       <div className="edit-details">
         <h4>{workout.exercise}</h4>
-        <button>Edit</button>
+        {isEditing ? (
+          <div>
+            <WorkoutForm workout={workout} onCancel={handleCancelEdit} />
+          </div>
+        ) : (
+          <button onClick={handleEdit}> Edit </button>
+        )}
       </div>
       <p>
         <strong> Load (kg): </strong>
@@ -31,16 +49,12 @@ const WorkoutDetails = ({ workout }) => {
         {workout.reps}
       </p>
       <div className="delete-details">
-        {/* <p>
-        <strong> splitDay: </strong>
-        {workout.splitDay}
-      </p> */}
         <p>
           {formatDistanceToNow(new Date(workout.createdAt), {
             addSuffix: true,
           })}
         </p>
-        <button onClick={handleClick}> Delete </button>
+        <button onClick={handleDelete}> Delete </button>
       </div>
     </div>
   );
