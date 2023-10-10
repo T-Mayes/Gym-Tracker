@@ -72,7 +72,7 @@ const WorkoutForm = () => {
       />
 
       {/* <label>Split Day:</label>
-      <select name="Split" id="cars">
+      <select name="Split" id="workouts">
         <option value="Chest & Biceps">Chest & Biceps</option>
         <option value="Back & Triceps">Back & Triceps</option>
         <option value="Legs">Legs</option>

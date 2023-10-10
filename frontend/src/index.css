@@ -64,7 +64,7 @@ header a {
 
 .edit-details {
   display: flex;
-  align-items:end;
+  align-items:flex-end;
   justify-content:space-between;
   border-radius: 4px;
 }
